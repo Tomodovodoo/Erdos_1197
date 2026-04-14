@@ -1,0 +1,270 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Leb}{\mathcal{L}}
+
+\title{A negative answer to an eventual covering question for rational dilates}
+\author{Enrique Barschkis}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  Let $E\subset (0,\infty)$ be measurable with positive Lebesgue measure. We ask whether, for almost every $x>0$, every sufficiently large integer $n$ admits an integer $r\ge 1$ such that
+  \[
+    x\in \frac{r}{n}E.
+  \]
+  The answer is negative. In fact, using a lemma of Buczolich and Mauldin, we construct a measurable set $E\subset (0,\infty)$ of positive measure and an interval $J\subset (0,\infty)$ such that for every $x\in J$ there are infinitely many integers $n$ for which
+  \[
+    x\notin \frac{r}{n}E\qquad\text{for every }r\in \N.
+  \]
+  Thus the desired eventual covering property can fail on a whole interval.
+\end{abstract}
+
+\section{Introduction}
+
+The problem under discussion is the following.
+
+\medskip
+\noindent
+\textbf{Question.}
+\emph{Let $E\subset (0,\infty)$ be a measurable set of positive Lebesgue measure. Is it true that, for almost all $x>0$, for all sufficiently large integers $n$, there exists an integer $r\ge 1$ such that}
+\[
+  x\in \frac{r}{n}E?
+\]
+\medskip
+
+If $E$ contains a nondegenerate interval, then the answer is trivially positive. Indeed, if $(a,b)\subset E$ with $0<a<b$, then for any fixed $x>0$ the interval
+\[
+  \left(\frac{nx}{b},\frac{nx}{a}\right)
+\]
+has length $nx\bigl(\frac1a-\frac1b\bigr)>1$ for all sufficiently large $n$, hence contains an integer $r\ge 1$; then $nx/r\in (a,b)\subset E$, equivalently $x\in \frac{r}{n}E$.
+
+The purpose of this note is to show that positivity of measure alone does \emph{not} suffice.
+
+\begin{theorem}\label{thm:main}
+  There exists a measurable set $E\subset (0,\infty)$ of positive Lebesgue measure and an interval
+  \[
+    J=\left[\frac{16}{25},\frac23\right]
+  \]
+  such that for every $x\in J$ there are infinitely many integers $n\ge 1$ with the property that
+  \[
+    x\notin \frac{r}{n}E\qquad\text{for every }r\in \N.
+  \]
+  In particular, the question above has a negative answer.
+\end{theorem}
+
+The proof is unconditional. Its only external input is a lemma of Buczolich and Mauldin, reproduced below in the exact form needed for our argument. The counterexample itself does not appear in their paper; it is obtained by repurposing their shell construction.
+
+\section{Notation and a lemma of Buczolich--Mauldin}
+
+For a set $A\subset (0,\infty)$ define
+\[
+  \Phi(A):=[1/2,1)\cap \bigcup_{m\in \N}\frac1m A
+  =\bigl\{x\in [1/2,1): \exists m\in \N\text{ such that }mx\in A\bigr\}.
+\]
+Thus $x\in \Phi(A)$ precisely when some positive integer multiple of $x$ belongs to $A$, subject to the restriction $x\in [1/2,1)$.
+
+We shall also use the intervals
+\[
+  I_F:=(8/9,1),\qquad I_\infty:=\left[\frac{16}{25},\frac23\right].
+\]
+
+The following lemma is the key input from Buczolich and Mauldin.
+
+\begin{lemma}[Buczolich--Mauldin]\label{lem:BM}
+  There exists $K_0\in \N$ such that for every integer $k\ge K_0$ there exists an integer $N_k$ with the following property: for every integer $\nu\ge N_k$ there is an open set
+  \[
+    H_{k,\nu}\subset (2^{\nu-1},2^\nu)
+  \]
+  such that
+  \begin{align*}
+    I_\infty &\subset \Phi(H_{k,\nu}),\\
+    \Leb\bigl(I_F\cap \Phi(H_{k,\nu})\bigr)&<5\cdot 2^{-k}.
+  \end{align*}
+\end{lemma}
+
+\begin{remark}
+  This is exactly the lemma used by Buczolich and Mauldin to prove their Theorem~1 on the convergence behavior of $\sum_{n=1}^{\infty} f(nx)$ for characteristic functions of open sets.
+\end{remark}
+
+From Lemma~\ref{lem:BM} we immediately obtain a sequence of pairwise disjoint open sets with the same two properties.
+
+\begin{lemma}\label{lem:disjoint-shells}
+  There exists an integer $K\in \N$ and a sequence $(H_k)_{k\ge K}$ of pairwise disjoint open sets such that for every $k\ge K$:
+  \begin{enumerate}
+    \item $H_k\subset (2^{\nu_k-1},2^{\nu_k})$ for some strictly increasing sequence of integers $(\nu_k)_{k\ge K}$;
+    \item $I_\infty\subset \Phi(H_k)$;
+    \item $\Leb(I_F\cap \Phi(H_k))<5\cdot 2^{-k}$.
+  \end{enumerate}
+  Moreover, $K$ can be chosen so large that
+  \begin{equation}\label{eq:tail-small}
+    \sum_{k=K}^{\infty} 5\cdot 2^{-k}<\Leb(I_F)=\frac19.
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  Choose $K\ge \max\{K_0,7\}$. For each $k\ge K$, select an integer $\nu_k\ge N_k$ in such a way that $\nu_K<\nu_{K+1}<\nu_{K+2}<\cdots$, and then choose an open set
+  \[
+    H_k:=H_{k,\nu_k}\subset (2^{\nu_k-1},2^{\nu_k})
+  \]
+  as given by Lemma~\ref{lem:BM}. Since the dyadic shells $(2^{\nu_k-1},2^{\nu_k})$ are pairwise disjoint, the sets $H_k$ are pairwise disjoint. Properties (2) and (3) are inherited directly from Lemma~\ref{lem:BM}.
+
+  Finally,
+  \[
+    \sum_{k=K}^{\infty} 5\cdot 2^{-k}=5\cdot 2^{-K+1}\le \frac{5}{64}<\frac19,
+  \]
+  because $K\ge 7$. This proves \eqref{eq:tail-small}.
+\end{proof}
+
+\section{Construction of the counterexample}
+
+Fix $K$ and $(H_k)_{k\ge K}$ as in Lemma~\ref{lem:disjoint-shells}, and set
+\[
+  F:=\bigcup_{k=K}^{\infty} H_k.
+\]
+Since $F$ is a countable union of open sets, it is measurable. Define
+\[
+  E:=I_F\setminus \Phi(F).
+\]
+We now verify that this set $E$ has the desired properties.
+
+It will be convenient to introduce also the multiplicative saturation
+\[
+  M(E):=\bigcup_{r\in \N} rE.
+\]
+Observe that for every $x>0$, every $n\in \N$, and every $r\in \N$,
+\begin{equation}\label{eq:basic-equiv}
+  x\in \frac{r}{n}E
+  \quad\Longleftrightarrow\quad
+  nx\in rE.
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:ME-equiv}
+  \exists r\in \N:\ x\in \frac{r}{n}E
+  \quad\Longleftrightarrow\quad
+  nx\in M(E).
+\end{equation}
+
+\begin{lemma}\label{lem:E-positive}
+  The set $E$ has positive Lebesgue measure.
+\end{lemma}
+
+\begin{proof}
+  By definition of $\Phi(F)$ and $F=\bigcup_{k\ge K}H_k$,
+  \[
+    \Phi(F)=\bigcup_{k=K}^{\infty}\Phi(H_k).
+  \]
+  Hence
+  \[
+    I_F\cap \Phi(F)\subset \bigcup_{k=K}^{\infty} \bigl(I_F\cap \Phi(H_k)\bigr).
+  \]
+  By countable subadditivity and Lemma~\ref{lem:disjoint-shells},
+  \[
+    \Leb(I_F\cap \Phi(F))
+    \le \sum_{k=K}^{\infty} \Leb(I_F\cap \Phi(H_k))
+    < \sum_{k=K}^{\infty} 5\cdot 2^{-k}
+    <\frac19
+    =\Leb(I_F).
+  \]
+  Therefore
+  \[
+    \Leb(E)=\Leb\bigl(I_F\setminus \Phi(F)\bigr)
+    =\Leb(I_F)-\Leb(I_F\cap \Phi(F))>0.
+  \]
+\end{proof}
+
+\begin{lemma}\label{lem:F-disjoint-ME}
+  The sets $F$ and $M(E)$ are disjoint:
+  \[
+    F\cap M(E)=\varnothing.
+  \]
+  Equivalently, for every $r\in \N$,
+  \[
+    F\cap rE=\varnothing.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Assume for contradiction that $y\in F\cap M(E)$. Then $y\in rE$ for some $r\in \N$, so we may write
+  \[
+    y=rx
+    \qquad\text{with }x\in E.
+  \]
+  Since $E\subset I_F\subset [1/2,1)$, we have $x\in [1/2,1)$. On the other hand, $y\in F$ implies
+  \[
+    x=\frac{y}{r}\in \frac1r F.
+  \]
+  Therefore
+  \[
+    x\in [1/2,1)\cap \frac1r F\subset \Phi(F).
+  \]
+  But $x\in E=I_F\setminus \Phi(F)$ by construction, a contradiction. Thus $F\cap M(E)=\varnothing$.
+\end{proof}
+
+\begin{lemma}\label{lem:bad-n}
+  For every $x\in I_\infty$ there are infinitely many integers $n\in \N$ such that
+  \[
+    nx\in F.
+  \]
+  Consequently, for every $x\in I_\infty$ there are infinitely many integers $n\in \N$ such that
+  \[
+    x\notin \frac{r}{n}E\qquad\text{for every }r\in \N.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Fix $x\in I_\infty$. By Lemma~\ref{lem:disjoint-shells}(2), for each $k\ge K$ we have $x\in \Phi(H_k)$. By definition of $\Phi(H_k)$, there exists an integer $n_k\in \N$ such that
+  \[
+    n_kx\in H_k\subset F.
+  \]
+  Since the sets $H_k$ are pairwise disjoint, the integers $n_k$ are pairwise distinct: indeed, if $n_k=n_{\ell}$ for $k\ne \ell$, then the common value $n_kx$ would belong to both $H_k$ and $H_{\ell}$, impossible. Hence the set $\{n_k:k\ge K\}$ is infinite, proving the first assertion.
+
+  Now let $n=n_k$ be one of these integers. Then $nx\in F$. If there existed $r\in \N$ such that $x\in \frac{r}{n}E$, then by \eqref{eq:basic-equiv} we would have $nx\in rE\subset M(E)$, contradicting Lemma~\ref{lem:F-disjoint-ME}. Therefore no such $r$ exists. Since there are infinitely many choices of $n=n_k$, the second assertion follows.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+  Let $E$ be the measurable set constructed above. By Lemma~\ref{lem:E-positive}, $E$ has positive Lebesgue measure. By Lemma~\ref{lem:bad-n}, every $x\in I_\infty=[16/25,2/3]$ admits infinitely many integers $n$ such that
+  \[
+    x\notin \frac{r}{n}E\qquad\text{for all }r\in \N.
+  \]
+  Therefore, on the whole interval $I_\infty$, the eventual covering property from the question fails. In particular, it is not true that for every positive-measure set $E\subset (0,\infty)$ the property holds for almost every $x>0$.
+\end{proof}
+
+\section{Concluding remark}
+
+The counterexample is stronger than a mere failure on a set of positive measure: the exceptional set contains an entire interval. The role of the Buczolich--Mauldin construction is to produce disjoint ``shells'' $H_k$ that every $x\in I_\infty$ hits infinitely often under integer multiplication, while the reciprocal shadows $\Phi(H_k)$ have summable measure inside $I_F$. Taking the complement of the total shadow inside $I_F$ creates a positive-measure set $E$ whose integer multiples avoid all of the shells. Each hit $nx\in H_k\subset F$ then becomes an obstruction to the desired representation $x\in (r/n)E$.
+
+\begin{thebibliography}{9}
+
+  \bibitem{BM}
+  Z.~Buczolich and R.~D. Mauldin,
+  \emph{On the convergence of $\sum_{n=1}^{\infty} f(nx)$ for measurable functions},
+  manuscript dated June 22, 2001.
+
+\end{thebibliography}
+
+\end{document}
