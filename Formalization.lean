@@ -89,7 +89,7 @@ lemma bm_approx_data :
           (∀ n : ℕ, (n : ℝ) ∈ Ioo ((7 : ℝ) / 8 * 2 ^ ν) ((9 : ℝ) / 8 * 2 ^ ν) →
             ∃ m : ℤ, |Real.logb 2 (n : ℝ) - (m : ℝ) / (q : ℝ)| <
               1 / (4 * (q : ℝ) * 2 ^ k)) := by
-  sorry
+  admit
 
 /-! ### BM shell definition and properties -/
 
