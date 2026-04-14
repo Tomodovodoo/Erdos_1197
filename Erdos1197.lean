@@ -1,4 +1,4 @@
-import StrongPNTBridge
+import PNTBridge
 import RequestProject_TorusSeparation
-import RequestProject_KroneckerApprox
+import RequestProject_BMCore
 import Formalization

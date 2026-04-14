@@ -1,5 +1,6 @@
 import Mathlib
-import StrongPNTBridge
+import PNTBridge
+import RequestProject_BMCore
 
 /-!
 # A Negative Answer to the Eventual Covering Question
@@ -26,6 +27,10 @@ open scoped ENNReal
 noncomputable section
 
 set_option maxHeartbeats 800000
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
 
 /-! ## Definitions -/
 
@@ -36,9 +41,6 @@ def Phi (A : Set ℝ) : Set ℝ :=
 
 /-- `I_F = (8/9, 1)`, the fundamental interval from which `E` is carved. -/
 def I_F : Set ℝ := Ioo (8/9 : ℝ) 1
-
-/-- `I_∞ = [16/25, 2/3]`, the interval on which the covering property fails. -/
-def I_inf : Set ℝ := Icc (16/25 : ℝ) (2/3)
 
 /-- `MultSat(E) = ⋃_{r≥1} r·E`, the multiplicative saturation of `E`. -/
 def MultSat (E : Set ℝ) : Set ℝ :=
@@ -56,40 +58,6 @@ The proof of `disjoint_shells` follows the architecture of [BuMa99]:
 @[simp]
 lemma Phi_empty : Phi ∅ = ∅ := by
   ext x; simp [Phi]
-
-/-! ### Kronecker–PNT approximation data
-
-The following lemma packages the combined output of Kronecker's theorem on
-simultaneous Diophantine approximation and the Prime Number Theorem.
-It is the deep number-theoretic foundation for the BM construction. -/
-
-/-- **Kronecker–PNT approximation data** for the BM construction.
-
-For each sufficiently large `k`, there exists `N_k` such that for all `ν ≥ N_k`,
-there exist:
-- A positive integer `q`,
-- For each `y ∈ I_∞`, a multiplier `m > 0` with `m·y ∈ ((8/9)·2^ν, 2^ν)` and
-  `log₂(m·y)` within `1/(q·2^k)` of a lattice point `n/q`,
-- For each integer `n ∈ ((7/8)·2^ν, (9/8)·2^ν)`, `log₂(n)` is within
-  `1/(4·q·2^k)` of a lattice point.
-
-This follows from Kronecker's theorem applied to `2^k` primes in
-`((23/16)·2^ν, (3/2)·2^ν)` (guaranteed by PNT for large `ν`)
-and `2^{ν−2}+1` integers in `((7/8)·2^ν, (9/8)·2^ν)`.
-Condition B of Kronecker's theorem is verified using the Fundamental Theorem of
-Arithmetic (the primes exceed all the integers in the relevant range). -/
-lemma bm_approx_data :
-    ∃ K₀ : ℕ, ∀ k, K₀ ≤ k →
-      ∃ N_k : ℕ, ∀ ν, N_k ≤ ν →
-        ∃ q : ℕ, 0 < q ∧
-          (∀ y ∈ I_inf, ∃ m : ℕ, 0 < m ∧
-            (m : ℝ) * y ∈ Ioo ((8 : ℝ) / 9 * 2 ^ ν) ((2 : ℝ) ^ ν) ∧
-            ∃ n : ℤ, |Real.logb 2 ((m : ℝ) * y) - (n : ℝ) / (q : ℝ)| <
-              1 / ((q : ℝ) * 2 ^ k)) ∧
-          (∀ n : ℕ, (n : ℝ) ∈ Ioo ((7 : ℝ) / 8 * 2 ^ ν) ((9 : ℝ) / 8 * 2 ^ ν) →
-            ∃ m : ℤ, |Real.logb 2 (n : ℝ) - (m : ℝ) / (q : ℝ)| <
-              1 / (4 * (q : ℝ) * 2 ^ k)) := by
-  admit
 
 /-! ### BM shell definition and properties -/
 
@@ -219,7 +187,7 @@ lemma thin_set_measure_bound (q : ℕ) (hq : 0 < q) (k : ℕ) (hk : 7 ≤ k) :
     use fun m => ENNReal.ofReal ( 4 / ( q * 2 ^ k ) );
     · rw [ Real.volume_Ioo ];
       refine' ENNReal.ofReal_le_ofReal _;
-      convert rpow_interval_width _ _ _ _ _ using 1 <;> ring <;> norm_num;
+      convert rpow_interval_width _ _ _ _ _ using 1 <;> ring_nf <;> norm_num;
       · exact mul_nonpos_of_nonpos_of_nonneg ( Int.cast_nonpos.mpr ( Finset.mem_Icc.mp ‹_› |>.2 ) ) ( by positivity );
       · field_simp;
         exact le_trans ( mul_le_mul_of_nonneg_left ( pow_le_pow_of_le_one ( by norm_num ) ( by norm_num ) hk ) zero_le_two ) ( by norm_num; linarith [ show ( q : ℝ ) ≥ 1 by norm_cast ] );
@@ -245,7 +213,7 @@ lemma thin_set_measure_bound (q : ℕ) (hq : 0 < q) (k : ℕ) (hk : 7 ≤ k) :
     · exact ENNReal.mul_ne_top ( by norm_num ) ( ENNReal.ofReal_ne_top );
     · exact mul_nonneg ( add_nonneg ( add_nonneg ( mul_nonneg ( Nat.cast_nonneg _ ) ( Real.logb_nonneg ( by norm_num ) ( by norm_num ) ) ) ( by positivity ) ) zero_le_one ) ( by positivity );
   refine lt_of_le_of_lt h_final ?_;
-  rw [ ENNReal.ofReal_lt_ofReal_iff ] <;> ring <;> norm_num [ hq.ne', hk ];
+  rw [ ENNReal.ofReal_lt_ofReal_iff ] <;> ring_nf <;> norm_num [ hq.ne', hk ];
   norm_num [ pow_mul, mul_assoc, mul_comm, mul_left_comm, hq.ne' ];
   have := logb_nine_eighth_lt;
   nlinarith [ show ( q : ℝ ) ≥ 1 by norm_cast, inv_pos.mpr ( by positivity : 0 < ( q : ℝ ) ), mul_inv_cancel₀ ( by positivity : ( q : ℝ ) ≠ 0 ), pow_pos ( by positivity : 0 < ( 1 / 2 : ℝ ) ) k, pow_le_pow_of_le_one ( by positivity : 0 ≤ ( 1 / 2 : ℝ ) ) ( by norm_num ) hk, mul_le_mul_of_nonneg_left this.le ( by positivity : 0 ≤ ( 1 / 2 : ℝ ) ^ k ) ]
@@ -340,8 +308,8 @@ lemma tsum_geometric_lt_I_F {K : ℕ} (hK : 7 ≤ K)
         rw [ ← Summable.sum_add_tsum_nat_add K ];
         · rw [ Finset.sum_eq_zero ] <;> aesop;
         · exact Summable.of_nonneg_of_le ( fun n => by positivity ) ( fun n => by split_ifs <;> norm_num ) ( summable_geometric_two.mul_left 5 );
-      convert h_geo_sum using 1 ; ring;
-      rw [ tsum_mul_right, tsum_mul_left, tsum_geometric_of_lt_one ] <;> ring <;> norm_num;
+      convert h_geo_sum using 1 ; ring_nf;
+      rw [ tsum_mul_right, tsum_mul_left, tsum_geometric_of_lt_one ] <;> ring_nf <;> norm_num;
     rw [ ← h_geo_sum, ENNReal.ofReal_tsum_of_nonneg ];
     · exact tsum_congr fun n => by split_ifs <;> norm_num;
     · intro n; split_ifs <;> positivity;
