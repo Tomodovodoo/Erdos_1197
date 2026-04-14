@@ -7,7 +7,7 @@ for the general case.
 
 The general case (arbitrary n) requires the double annihilator theorem for the
 n-torus (Pontryagin duality), which states that a closed subgroup of (ℝ/ℤ)ⁿ
-is determined by its annihilator in ℤⁿ. This is left as sorry.
+is determined by its annihilator in ℤⁿ. This is currently left as an admitted placeholder.
 -/
 import Mathlib
 
