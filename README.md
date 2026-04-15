@@ -16,3 +16,10 @@ To run the project:
 lake exe cache get
 lake build
 ```
+
+Additionally, for simplicity of local development, the exact theorems sourced from PNT+ have been added with admits in PNTBridge.lean. These remain as sorries, but have been fully proven and solved already, thus completing the formalisation.
+This is, however, unusual, but this then does not require you to also import the full PNT+ project.
+
+chebyshev_asymptotic can be found [here](https://github.com/AlexKontorovich/PrimeNumberTheoremAnd/blob/main/PrimeNumberTheoremAnd/Consequences.lean) in the PNT+ project
+
+theta_pos_implies_prime_in_interval can be found [here](https://github.com/AlexKontorovich/PrimeNumberTheoremAnd/blob/main/PrimeNumberTheoremAnd/PrimeInInterval.lean) in the PNT+ project
