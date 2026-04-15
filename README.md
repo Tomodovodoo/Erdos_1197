@@ -2,7 +2,7 @@
 
 ![Dependency graph](dependency-graph.svg)
 
-This graph shows the repair slice from the imported PNT facts to the former single gap
+This graph shows the plumbing from the PNT+ project to the resolving the last remaining sorry, completing the proof!
 `bm_approx_data`.
 
 Pink nodes are imported or preexisting boundary dependencies outside our contribution. Gray nodes are local
