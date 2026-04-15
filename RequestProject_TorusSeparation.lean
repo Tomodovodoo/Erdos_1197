@@ -9,8 +9,6 @@ import Mathlib
 
 open scoped BigOperators
 
-set_option maxHeartbeats 1600000
-
 noncomputable section
 
 /-! ## Classification of closed subgroups of ℝ -/

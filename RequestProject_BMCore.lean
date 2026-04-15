@@ -8,8 +8,6 @@ open scoped Asymptotics BigOperators Chebyshev ENNReal
 
 noncomputable section
 
-set_option maxHeartbeats 800000
-
 /-- `I_∞ = [16/25, 2/3]`, the interval on which the covering property fails. -/
 def I_inf : Set ℝ := Icc (16/25 : ℝ) (2/3)
 

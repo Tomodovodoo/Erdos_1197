@@ -26,8 +26,6 @@ open scoped ENNReal
 
 noncomputable section
 
-set_option maxHeartbeats 800000
-
 /-! ## Definitions -/
 
 /-- `Φ(A) = {x ∈ [1/2, 1) : ∃ m ≥ 1, m·x ∈ A}`.

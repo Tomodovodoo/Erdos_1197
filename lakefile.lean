@@ -14,9 +14,5 @@ require "leanprover-community" / "mathlib" @ git "v4.28.0"
 @[default_target]
 lean_lib Erdos1197 where
   roots := #[
-    `PNTBridge,
-    `RequestProject_TorusSeparation,
-    `RequestProject_BMCore,
-    `Formalization,
     `Erdos1197
   ]
