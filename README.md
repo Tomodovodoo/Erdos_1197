@@ -2,7 +2,15 @@
 
 ![Dependency graph](dependency-graph.svg)
 
-Blue: Imported solved theorems and lemmas. Green: the resolved previously sorried `bm_approx_data`.
+This graph shows the verified theorem path from the PNT bridge to the former single gap
+`bm_approx_data`.
+
+Blue nodes are the upstream dependencies on that path. The green node is the resolved
+`bm_approx_data` theorem itself.
+
+The graph intentionally omits downstream consumers in `Formalization.lean` and routine
+algebraic helper lemmas. It also omits the unused helper
+`bm_approx_data_of_positive_flat_data`.
 
 To run the project:
 ```powershell
