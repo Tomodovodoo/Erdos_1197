@@ -2,8 +2,9 @@
 
 ![Dependency graph](dependency-graph.svg)
 
-Blue: imported inputs. Green: resolved `bm_approx_data`.
+Blue: Imported solved theorems and lemmas. Green: the resolved previously sorried `bm_approx_data`.
 
+To run the project:
 ```powershell
 lake exe cache get
 lake build
