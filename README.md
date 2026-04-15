@@ -9,7 +9,7 @@ Pink nodes are imported or preexisting boundary dependencies outside our contrib
 theorems and lemmas we contributed. The green node is the resolved former gap
 `bm_approx_data`.
 
-This completes the lean formalisation of Erdos Problem 1197, many thanks to ebarschkis for all main contributions, and co-authorship of this formalisation with ChatGPT and Aristotle
+This completes the lean formalisation of Erdos Problem 1197, many thanks to ebarschkis for all main contributions, and co-authorship of this formalisation with ChatGPT and Aristotle.
 
 To run the project:
 ```powershell
