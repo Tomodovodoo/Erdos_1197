@@ -27,10 +27,6 @@ open scoped ENNReal
 noncomputable section
 
 set_option maxHeartbeats 800000
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSimpArgs false
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
 
 /-! ## Definitions -/
 
@@ -70,7 +66,7 @@ def bm_shell (k ν q : ℕ) : Set ℝ :=
 /-
 The BM shell is open (for `q > 0`).
 -/
-lemma bm_shell_isOpen (k ν q : ℕ) (hq : 0 < q) : IsOpen (bm_shell k ν q) := by
+lemma bm_shell_isOpen (k ν q : ℕ) (_hq : 0 < q) : IsOpen (bm_shell k ν q) := by
   refine' isOpen_iff_mem_nhds.mpr fun x hx => _;
   obtain ⟨ n, hn ⟩ := hx.2;
   -- Since $| \log_2 x - n / q | < 1 / (q * 2^k)$, there exists an open interval around $x$ where $| \log_2 y - n / q | < 1 / (q * 2^k)$.
@@ -104,7 +100,7 @@ lemma bm_shell_covers (k ν q : ℕ)
 **Shadow containment**: if `y ∈ I_F ∩ Φ(bm_shell)`, then `log₂ y` is within
     `2/(q·2^k)` of some lattice point `m/q`.
 -/
-lemma bm_shadow_containment (k ν q : ℕ) (hq : 0 < q)
+lemma bm_shadow_containment (k ν q : ℕ) (_hq : 0 < q)
     (h_lattice : ∀ n : ℕ, (n : ℝ) ∈ Ioo ((7 : ℝ) / 8 * 2 ^ ν) ((9 : ℝ) / 8 * 2 ^ ν) →
       ∃ m : ℤ, |Real.logb 2 (n : ℝ) - (m : ℝ) / (q : ℝ)| <
         1 / (4 * (q : ℝ) * 2 ^ k)) :
@@ -272,7 +268,7 @@ lemma exists_strictMono_above (K : ℕ) (N : ℕ → ℕ) :
     · exact lt_of_lt_of_le ‹_› ( by rw [ Nat.sub_add_comm ( by linarith ) ] ; simp +arith +decide );
   · intro k hk;
     induction hk <;> simp +arith +decide [ * ];
-    simp_all +arith +decide [ Nat.succ_sub ( show K ≤ _ from by assumption ), add_comm K, add_left_comm K ]
+    simp_all +arith +decide [ Nat.succ_sub ( show K ≤ _ from by assumption ), add_comm K ]
 
 /-
 Dyadic intervals `(2^n / 2, 2^n)` are disjoint for distinct `n`.

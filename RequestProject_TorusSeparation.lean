@@ -2,22 +2,14 @@
 # Hard Direction of Kronecker's Theorem
 
 This file contains the proof of the hard direction of Kronecker's approximation
-theorem for the case n = 1 (arbitrary m), along with the infrastructure needed
-for the general case.
-
-The general case (arbitrary n) requires the double annihilator theorem for the
-n-torus (Pontryagin duality), which states that a closed subgroup of (ℝ/ℤ)ⁿ
-is determined by its annihilator in ℤⁿ. This is currently left as an admitted placeholder.
+theorem in the BM-facing common-denominator form used by the Buczolich–Mauldin
+construction, along with the torus-separation infrastructure that supports it.
 -/
 import Mathlib
 
 open scoped BigOperators
 
 set_option maxHeartbeats 1600000
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSimpArgs false
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
 
 noncomputable section
 
@@ -187,7 +179,7 @@ abbrev T := UnitAddTorus d
 noncomputable def subgroupUnivPositiveCompact {α : Type*} [AddGroup α] [TopologicalSpace α]
     [ContinuousAdd α] [ContinuousNeg α] [CompactSpace α] [Nonempty α] :
     TopologicalSpace.PositiveCompacts α :=
-  ⟨⟨Set.univ, isCompact_univ⟩, by simpa using (isOpen_univ.mem_nhds trivial)⟩
+  ⟨⟨Set.univ, isCompact_univ⟩, by simp⟩
 
 def torusTranslate (a : UnitAddTorus d) : C(UnitAddTorus d, UnitAddTorus d) :=
   ContinuousMap.id _ + ContinuousMap.const _ a
@@ -227,7 +219,7 @@ lemma avgOverSubgroup_norm_le (H : ClosedAddSubgroup (UnitAddTorus d))
   have hμ : μH Set.univ = 1 := by
     simpa [μH] using
       (addHaarMeasure_self (G := H) (K₀ := subgroupUnivPositiveCompact (α := H)))
-  haveI : IsFiniteMeasure μH := ⟨by simpa [hμ]⟩
+  haveI : IsFiniteMeasure μH := ⟨by simp [hμ]⟩
   refine (ContinuousMap.norm_le (f := avgOverSubgroup (d := d) H f) (norm_nonneg _)).2 ?_
   intro y
   rw [avgOverSubgroup_apply]
@@ -373,7 +365,7 @@ lemma avgOverSubgroup_mFourier_of_mem_ann
           UnitAddTorus.mFourier n y * UnitAddTorus.mFourier n (h : UnitAddTorus d) := by
     intro h
     simp [UnitAddTorus.mFourier, fourier_apply, AddCircle.toCircle_add,
-      Finset.prod_mul_distrib, mul_comm]
+      Finset.prod_mul_distrib]
   have hconst :
       ∀ h : H,
         UnitAddTorus.mFourier n (y + (h : UnitAddTorus d)) =
@@ -401,7 +393,7 @@ lemma avgOverSubgroup_mFourier_of_not_mem_ann
           UnitAddTorus.mFourier n y * UnitAddTorus.mFourier n (h : UnitAddTorus d) := by
     intro h
     simp [UnitAddTorus.mFourier, fourier_apply, AddCircle.toCircle_add,
-      Finset.prod_mul_distrib, mul_comm]
+      Finset.prod_mul_distrib]
   obtain ⟨h, hh⟩ : ∃ h : H, UnitAddTorus.mFourier n (h : UnitAddTorus d) ≠ 1 := by
     by_contra hcontra
     apply hn
@@ -435,8 +427,8 @@ lemma avgOverSubgroup_mem_annSubmodule_mFourier
   · have hmem : UnitAddTorus.mFourier n ∈ annSubmodule (d := d) H := by
       exact Submodule.subset_span ⟨n, hn, rfl⟩
     simpa [avgOverSubgroup_mFourier_of_mem_ann (d := d) H n hn] using hmem
-  · simpa [avgOverSubgroup_mFourier_of_not_mem_ann (d := d) H n hn] using
-      (Submodule.zero_mem (annSubmodule (d := d) H))
+  · rw [avgOverSubgroup_mFourier_of_not_mem_ann (d := d) H n hn]
+    exact Submodule.zero_mem (annSubmodule (d := d) H)
 
 lemma avgOverSubgroup_mem_annSubmodule_of_mem_span
     (H : ClosedAddSubgroup (UnitAddTorus d))
@@ -452,7 +444,7 @@ lemma avgOverSubgroup_mem_annSubmodule_of_mem_span
   · intro g hg
     rcases hg with ⟨n, rfl⟩
     exact avgOverSubgroup_mem_annSubmodule_mFourier (d := d) H n
-  · simpa [p, avgOverSubgroup]
+  · simp [p, avgOverSubgroup]
   · intro x y hx hy hxmem hymem
     simpa [p, avgOverSubgroup_add (d := d) H x y] using
       (annSubmodule (d := d) H).add_mem hxmem hymem
@@ -481,11 +473,13 @@ def sameValueCLM (x : UnitAddTorus d) : C(UnitAddTorus d, ℂ) →L[ℂ] ℂ :=
 def sameValueSubmodule (x : UnitAddTorus d) : Submodule ℂ C(UnitAddTorus d, ℂ) :=
   (sameValueCLM (d := d) x).toLinearMap.ker
 
+omit [Fintype d] in
 lemma mem_sameValueSubmodule_iff
     (x : UnitAddTorus d) (f : C(UnitAddTorus d, ℂ)) :
     f ∈ sameValueSubmodule (d := d) x ↔ f x = f 0 := by
   simp [sameValueSubmodule, sameValueCLM, sub_eq_zero]
 
+omit [Fintype d] in
 lemma isClosed_sameValueSubmodule (x : UnitAddTorus d) :
     IsClosed (sameValueSubmodule (d := d) x : Set C(UnitAddTorus d, ℂ)) := by
   simpa [sameValueSubmodule] using
@@ -537,6 +531,7 @@ def xPlusH (H : ClosedAddSubgroup (UnitAddTorus d)) (x : UnitAddTorus d) :
     Set (UnitAddTorus d) :=
   Set.range fun h : H => x + (h : UnitAddTorus d)
 
+omit [Fintype d] in
 lemma isCompact_xPlusH
     (H : ClosedAddSubgroup (UnitAddTorus d))
     (x : UnitAddTorus d) :
@@ -546,6 +541,7 @@ lemma isCompact_xPlusH
       (continuous_const.add continuous_subtype_val :
         Continuous fun h : H => x + (h : UnitAddTorus d)))
 
+omit [Fintype d] in
 lemma disjoint_xPlusH
     (H : ClosedAddSubgroup (UnitAddTorus d))
     {x : UnitAddTorus d}
@@ -566,11 +562,11 @@ lemma subgroup_univ_measure
 lemma integral_const_subgroup
     (H : ClosedAddSubgroup (UnitAddTorus d))
     (c : ℂ) :
-    (∫ h : H, c ∂(addHaarMeasure (subgroupUnivPositiveCompact (α := H)))) = c := by
+    (∫ _h : H, c ∂(addHaarMeasure (subgroupUnivPositiveCompact (α := H)))) = c := by
   let μH : Measure H := addHaarMeasure (subgroupUnivPositiveCompact (α := H))
   have hμ : μH Set.univ = 1 := by
     simpa [μH] using subgroup_univ_measure (d := d) H
-  haveI : IsFiniteMeasure μH := ⟨by simpa [hμ]⟩
+  haveI : IsFiniteMeasure μH := ⟨by simp [hμ]⟩
   rw [integral_const, Measure.real_def, hμ, ENNReal.toReal_one, one_smul]
 
 def ofRealContinuousMap (f : C(UnitAddTorus d, ℝ)) : C(UnitAddTorus d, ℂ) where
@@ -644,7 +640,7 @@ lemma mFourier_eq_one_iff_exists_int
     calc
       UnitAddTorus.mFourier r (fun j => ((x j : ℝ) : AddCircle (1 : ℝ))) =
           ∏ j, Complex.exp (2 * Real.pi * Complex.I * ((r j : ℝ) * x j)) := by
-            simp [UnitAddTorus.mFourier, fourier_coe_apply, mul_assoc, mul_left_comm, mul_comm]
+            simp [UnitAddTorus.mFourier, mul_assoc, mul_left_comm, mul_comm]
       _ = Complex.exp (∑ j, 2 * Real.pi * Complex.I * ((r j : ℝ) * x j)) := by
             rw [← Complex.exp_sum]
       _ = Complex.exp (2 * Real.pi * Complex.I * (∑ j, x j * (r j : ℝ))) := by
@@ -669,7 +665,7 @@ lemma mFourier_eq_one_iff_exists_int
     rw [hz]
     rw [Complex.exp_eq_one_iff]
     refine ⟨z, ?_⟩
-    simp [mul_assoc, mul_left_comm, mul_comm]
+    simp [mul_left_comm, mul_comm]
 
 /-- A BM-facing specialization of Kronecker's hard direction: one common denominator for many
 target coordinates. The nonzero-denominator normalization is deferred to the BM application. -/
@@ -691,7 +687,8 @@ theorem kronecker_intrel_implies_approx_common_q_int
     exact AddSubgroup.le_topologicalClosure Z <|
       by
         change αbar ∈ AddSubgroup.zmultiples αbar
-        simpa using (AddSubgroup.zsmul_mem_zmultiples αbar (1 : ℤ))
+        convert AddSubgroup.zsmul_mem_zmultiples αbar (1 : ℤ) using 1
+        simp
   have hβ_mem : βbar ∈ H := by
     apply mem_of_mFourier_eq_one_on_annihilator (H := H)
     intro r hr

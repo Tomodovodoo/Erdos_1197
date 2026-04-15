@@ -9,10 +9,6 @@ open scoped Asymptotics BigOperators Chebyshev ENNReal
 noncomputable section
 
 set_option maxHeartbeats 800000
-set_option linter.unnecessarySimpa false
-set_option linter.unusedSimpArgs false
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
 
 /-- `I_∞ = [16/25, 2/3]`, the interval on which the covering property fails. -/
 def I_inf : Set ℝ := Icc (16/25 : ℝ) (2/3)
@@ -35,7 +31,7 @@ abbrev zpos (z : ℤ) : ℕ := Int.toNat z
 abbrev zneg (z : ℤ) : ℕ := Int.toNat (-z)
 
 lemma zpos_sub_zneg (z : ℤ) : (zpos z : ℤ) - zneg z = z := by
-  simpa [zpos, zneg] using z.toNat_sub_toNat_neg
+  simp [zpos, zneg]
 
 lemma cast_zpos_sub_zneg (z : ℤ) : (zpos z : ℝ) - zneg z = z := by
   exact_mod_cast zpos_sub_zneg z
@@ -418,7 +414,7 @@ lemma prime_not_dvd_pow_of_not_dvd {p a e : ℕ} (hp : Nat.Prime p) (hnot : ¬ p
   intro h
   exact hnot (hp.dvd_of_dvd_pow h)
 
-lemma bmIntVal_pos (ν : ℕ) (hν : 3 ≤ ν) (j : IntIdx ν) : 0 < bmIntVal ν j := by
+lemma bmIntVal_pos (ν : ℕ) (_hν : 3 ≤ ν) (j : IntIdx ν) : 0 < bmIntVal ν j := by
   have hbase : 0 < 7 * 2 ^ (ν - 3) := by
     have hpow : 0 < 2 ^ (ν - 3) := pow_pos (by omega) _
     omega
@@ -560,14 +556,14 @@ lemma bm_flat_intrel_of_prime_window
     dsimp [A]
     rw [logb_nat_mul (mul_ne_zero (pow_ne_zero _ two_ne_zero) hprimePos_ne) hintPos_ne,
       logb_nat_mul (pow_ne_zero _ two_ne_zero) hprimePos_ne]
-    simp [Real.logb_pow, add_assoc, add_left_comm, add_comm]
+    simp [Real.logb_pow, add_assoc]
   have hBlog :
       Real.logb 2 (B : ℝ) =
         zpos z + Real.logb 2 (primeNegProd : ℝ) + Real.logb 2 (intNegProd : ℝ) := by
     dsimp [B]
     rw [logb_nat_mul (mul_ne_zero (pow_ne_zero _ two_ne_zero) hprimeNeg_ne) hintNeg_ne,
       logb_nat_mul (pow_ne_zero _ two_ne_zero) hprimeNeg_ne]
-    simp [Real.logb_pow, add_assoc, add_left_comm, add_comm]
+    simp [Real.logb_pow, add_assoc]
   have hlogEq : Real.logb 2 (A : ℝ) = Real.logb 2 (B : ℝ) := by
     nlinarith [hzSplit, hPrimeLog, hIntLog, hAlog, hBlog, cast_zpos_sub_zneg z]
   have hA_pos : 0 < (A : ℝ) := by exact_mod_cast Nat.pos_of_ne_zero (show A ≠ 0 by
@@ -759,7 +755,7 @@ lemma bm_q_nonzero_of_first_prime_target
   let s : ℝ := (p : ℝ) + 1 / (2 : ℝ) ^ k
   have hneg : |-s| < 1 / (4 * (2 : ℝ) ^ k) := by
     convert hq using 1
-    · simp [s, hzero, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    · simp [s, hzero, sub_eq_add_neg, add_comm]
   have hrew : |s| < 1 / (4 * (2 : ℝ) ^ k) := by
     simpa [abs_neg] using hneg
   exact (bm_half_grid_not_near_integer k hk p) hrew
@@ -801,14 +797,14 @@ lemma int_sign_mul_div_natAbs (q m : ℤ) (hq : q ≠ 0) :
     have hqreal : (q : ℝ) ≠ 0 := by exact_mod_cast hqneg.ne
     calc
       (((Int.sign q * m : ℤ) : ℝ) / (Int.natAbs q : ℝ))
-          = ((-(m : ℝ)) / (-(q : ℝ))) := by simp [hsign, hqabs, Int.cast_mul]
+          = ((-(m : ℝ)) / (-(q : ℝ))) := by simp [hsign, hqabs]
       _ = (m : ℝ) / (q : ℝ) := by field_simp [hqreal]
   · contradiction
   · have hsign : Int.sign q = 1 := Int.sign_eq_one_of_pos hqpos
     have hqabs : (Int.natAbs q : ℝ) = (q : ℝ) := by
       rw [Nat.cast_natAbs, Int.cast_abs, abs_of_pos]
       exact_mod_cast hqpos
-    simp [hsign, hqabs, Int.cast_mul]
+    simp [hsign, hqabs]
 
 lemma bm_integer_lattice_of_common_q
     {k ν : ℕ} {p : PrimeIdx k → ℕ} {q : ℤ}
@@ -855,7 +851,7 @@ lemma bm_integer_lattice_of_common_q
     simpa [z] using int_sign_mul_div_natAbs q (m idx) hq
   rw [hrewrite]
   have hqabs_cast : (Int.natAbs q : ℝ) = |(q : ℝ)| := by
-    simpa using (Nat.cast_natAbs q)
+    rw [Nat.cast_natAbs, Int.cast_abs]
   have hqabs_cast_pos : 0 < (Int.natAbs q : ℝ) := by
     rw [hqabs_cast]
     exact hqabs_pos
@@ -864,7 +860,9 @@ lemma bm_integer_lattice_of_common_q
         1 / (4 * ((Int.natAbs q : ℝ)) * (2 : ℝ) ^ k) := by
     rw [← hqabs_cast]
     field_simp [hqabs_cast_pos.ne']
-  exact htarget ▸ hscaled
+  rw [hqabs_cast]
+  convert hscaled using 1
+  ring_nf
 
 lemma bm_prime_coordinate_of_common_q
     {k ν : ℕ} {p : PrimeIdx k → ℕ} {q : ℤ}
@@ -1124,7 +1122,7 @@ lemma bm_prime_cover_of_negative_q
             -Real.logb 2 y + (j : ℝ) / ((q : ℝ) * (2 : ℝ) ^ k) - (n₀ : ℝ) / (q : ℝ) := by
         dsimp [t]
         have hdiv : -((n₀ : ℝ) / (q : ℝ)) = -(n₀ : ℝ) / (q : ℝ) := by ring
-        simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, Int.cast_neg, hdiv]
+        simp [sub_eq_add_neg, add_comm, Int.cast_neg, hdiv]
       rw [hEq]
       exact hgrid_raw
     have htarget : |t| ≤ 1 / (2 * (q : ℝ) * (2 : ℝ) ^ k) := by
@@ -1274,7 +1272,7 @@ lemma bm_integer_cover_of_coordinate_data
     simpa [z] using int_sign_mul_div_natAbs q (a j) hq
   rw [hrewrite]
   have hqabs_cast : (Int.natAbs q : ℝ) = |(q : ℝ)| := by
-    simpa using (Nat.cast_natAbs q)
+    rw [Nat.cast_natAbs, Int.cast_abs]
   have hqabs_cast_pos : 0 < (Int.natAbs q : ℝ) := by
     rw [hqabs_cast]
     exact hqabs_pos
@@ -1283,7 +1281,9 @@ lemma bm_integer_cover_of_coordinate_data
         1 / (4 * ((Int.natAbs q : ℝ)) * (2 : ℝ) ^ k) := by
     rw [← hqabs_cast]
     field_simp [hqabs_cast_pos.ne']
-  exact htarget ▸ hscaled
+  rw [hqabs_cast]
+  convert hscaled using 1
+  ring_nf
 
 lemma bm_integer_cover_of_positive_q
     {k ν q : ℕ} (hq : 0 < q) (hν : 3 ≤ ν)
