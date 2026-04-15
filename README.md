@@ -5,7 +5,7 @@
 This graph shows the repair slice from the imported PNT facts to the former single gap
 `bm_approx_data`.
 
-Pink nodes are boundary dependencies outside our contribution. Gray nodes are local
+Pink nodes are imported or preexisting boundary dependencies outside our contribution. Gray nodes are local
 theorems and lemmas we contributed. The green node is the resolved former gap
 `bm_approx_data`.
 
