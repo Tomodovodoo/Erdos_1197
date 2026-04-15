@@ -2,10 +2,12 @@
 
 ![Dependency graph](dependency-graph.svg)
 
-This graph shows the local theorem work used to repair the former single gap
+This graph shows the repair slice from the imported PNT facts to the former single gap
 `bm_approx_data`.
 
-Pink nodes are imported boundary facts not contributed as part of the repair. Gray nodes are local theorems and lemmas proved in this repo. The green node is the resolved former gap `bm_approx_data`.
+Pink nodes are boundary dependencies outside our contribution. Gray nodes are local
+theorems and lemmas we contributed. The green node is the resolved former gap
+`bm_approx_data`.
 
 The graph is theorem-focused: it shows the named local proof components that materially
 feed `bm_approx_data`. Plain definitions and very small algebraic side lemmas are omitted
