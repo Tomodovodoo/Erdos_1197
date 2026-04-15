@@ -330,7 +330,7 @@ theorem bm_many_primes (k : ℕ) :
     have htheta :
         θ (bmPrimeRight k ν j) - θ (bmPrimeLeft k ν j) > 0 := by
       simpa [bmPrimeLeft, bmPrimeRight] using hν_all j
-    simpa [bmPrimeRight, bmPrimeLeft, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+    simpa [HasPrimeInInterval, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using
       theta_pos_implies_prime_in_interval hleft_lt_right htheta
   choose p hpPrime hpLower hpUpper using hPrimeExists
   refine ⟨p, ?_, hpPrime, ?_⟩

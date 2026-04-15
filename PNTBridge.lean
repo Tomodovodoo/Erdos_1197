@@ -7,13 +7,17 @@ noncomputable section
 
 set_option warn.sorry false
 
+/-- There is a prime in the interval `(x, x + h]`. This mirrors the PNT+ predicate. -/
+def HasPrimeInInterval (x h : ℝ) : Prop :=
+  ∃ p : ℕ, Nat.Prime p ∧ x < p ∧ (p : ℝ) ≤ x + h
+
 /-- PNT+ Chebyshev asymptotic, mirrored locally as an allowed trusted input. -/
 theorem chebyshev_asymptotic :
-    Asymptotics.IsEquivalent Filter.atTop Chebyshev.theta id := by
+    θ ~[Filter.atTop] id := by
   admit
 
 /-- PNT+ prime-in-interval consequence of positivity of a theta increment. -/
 theorem theta_pos_implies_prime_in_interval {x y : ℝ}
     (_hxy : y < x) (h : θ x - θ y > 0) :
-    ∃ p : ℕ, Nat.Prime p ∧ y < p ∧ (p : ℝ) ≤ x := by
+    HasPrimeInInterval y (x - y) := by
   admit
